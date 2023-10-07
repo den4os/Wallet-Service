@@ -1,52 +1,51 @@
 package com.ylab.walletservice.domain.entities;
 
 /**
- * This class representing a player and
- * information about his current balance.
+ * This class representing a player
  *
  * @author Denis Zanin
  * @version 1.0
- * @since 2023-10-06
+ * @since 2023-10-07
  */
 public class Player {
-    private final int playerId;
-    private double balance;
+    private String playerId;
+    private String username;
+    private String password;
 
     /**
-     * Constructor for creating a new player with a given identifier and initial balance.
+     * Creates a new player with the given ID, username and password.
      *
-     * @param playerId Player ID.
-     * @param balance  Player's initial balance..
+     * @param playerId Unique player identifier.
+     * @param username Username (login).
+     * @param password Hashed password (safely store the password).
      */
-    public Player(int playerId, double balance) {
+    public Player(String playerId, String username, String password) {
         this.playerId = playerId;
-        this.balance = balance;
+        this.username = username;
+        this.password = password;
     }
 
-    /**
-     * Gets the player ID.
-     *
-     * @return Player ID.
-     */
-    public int getPlayerId() {
+    public String getPlayerId() {
         return playerId;
     }
 
-    /**
-     * Gets the player's current balance.
-     *
-     * @return Current player balance.
-     */
-    public double getBalance() {
-        return balance;
+    public String getUsername() {
+        return username;
     }
 
-    /**
-     * Sets the player's current balance.
-     *
-     * @param balance New player balance.
-     */
-    public void setBalance(double balance) {
-        this.balance = balance;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPlayerId(String playerId) {
+        this.playerId = playerId;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
