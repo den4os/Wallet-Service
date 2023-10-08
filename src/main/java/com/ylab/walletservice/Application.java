@@ -17,6 +17,7 @@ public class Application {
         TransactionRepository transactionRepository = new InMemoryTransactionRepository();
         TransactionService transactionService = new TransactionServiceImpl(playerRepository, transactionRepository);
         ConsoleUserInterface consoleUserInterface = new ConsoleUserInterface(playerService, transactionService);
+
         consoleUserInterface.start();
     }
 }

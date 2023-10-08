@@ -7,5 +7,5 @@ import java.util.List;
 public interface TransactionService {
     boolean performDebitTransaction(String playerId, String transactionId, double amount);
     boolean performCreditTransaction(String playerId, String transactionId, double amount);
-    List<Transaction> getTransactionHistory(String playerId);
+    List<Transaction> getPlayerTransactionHistory(String playerId);
 }

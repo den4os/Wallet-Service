@@ -23,16 +23,18 @@ public class TransactionServiceImpl implements TransactionService {
         Player player = playerRepository.findById(playerId);
 
         if (player != null && player.getBalance() >= amount) {
-            LocalDateTime timestamp = LocalDateTime.now();
-            Transaction debitTransaction = new Transaction(transactionId, playerId, TransactionType.DEBIT, amount, timestamp);
+            if (!transactionRepository.getAllTransactions().containsKey(transactionId)) {
+                LocalDateTime timestamp = LocalDateTime.now();
+                Transaction debitTransaction = new Transaction(transactionId, playerId, TransactionType.DEBIT, amount, timestamp);
 
-            double newBalance = player.getBalance() - amount;
-            player.setBalance(newBalance);
+                double newBalance = player.getBalance() - amount;
+                player.setBalance(newBalance);
 
-            transactionRepository.saveTransaction(debitTransaction);
-            playerRepository.save(player);
+                transactionRepository.saveTransaction(debitTransaction);
+                playerRepository.save(player);
 
-            return true;
+                return true;
+            }
         }
 
         return false;
@@ -43,23 +45,26 @@ public class TransactionServiceImpl implements TransactionService {
         Player player = playerRepository.findById(playerId);
 
         if (player != null) {
-            LocalDateTime timestamp = LocalDateTime.now();
-            Transaction creditTransaction = new Transaction(transactionId, playerId, TransactionType.CREDIT, amount, timestamp);
+            if (!transactionRepository.getAllTransactions().containsKey(transactionId)) {
+                LocalDateTime timestamp = LocalDateTime.now();
+                Transaction creditTransaction = new Transaction(transactionId, playerId, TransactionType.CREDIT, amount, timestamp);
 
-            double newBalance = player.getBalance() + amount;
-            player.setBalance(newBalance);
+                double newBalance = player.getBalance() + amount;
+                player.setBalance(newBalance);
 
-            transactionRepository.saveTransaction(creditTransaction);
-            playerRepository.save(player);
+                transactionRepository.saveTransaction(creditTransaction);
+                playerRepository.save(player);
 
-            return true;
+
+                return true;
+            }
         }
 
         return false;
     }
 
     @Override
-    public List<Transaction> getTransactionHistory(String playerId) {
+    public List<Transaction> getPlayerTransactionHistory(String playerId) {
         return transactionRepository.getTransactionsByPlayerId(playerId);
     }
 }

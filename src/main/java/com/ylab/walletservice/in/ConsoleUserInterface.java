@@ -12,6 +12,7 @@ public class ConsoleUserInterface {
     private final Scanner scanner;
     private final PlayerService playerService;
     private final TransactionService transactionService;
+    private Player authorizedPlayer;
 
     public ConsoleUserInterface(PlayerService playerService, TransactionService transactionService) {
         this.scanner = new Scanner(System.in);
@@ -23,10 +24,17 @@ public class ConsoleUserInterface {
         System.out.println("Welcome to the Wallet Service Console App");
         System.out.println("1. Register Player");
         System.out.println("2. Authorize Player");
-        System.out.println("3. Perform Transaction");
-        System.out.println("4. Current balance");
-        System.out.println("5. View Transaction History");
-        System.out.println("6. Exit");
+        System.out.println("3. Exit");
+        System.out.print("Please select an option: ");
+        System.out.println();
+    }
+
+    public void showPlayerMenu() {
+        System.out.println("Personal Area");
+        System.out.println("1. Perform Transaction");
+        System.out.println("2. Current balance");
+        System.out.println("3. View Transaction History");
+        System.out.println("4. Logout");
         System.out.print("Please select an option: ");
         System.out.println();
     }
@@ -44,21 +52,37 @@ public class ConsoleUserInterface {
                     handlePlayerAuthorization();
                     break;
                 case 3:
-                    handleTransaction();
-                    break;
-                case 4:
-                    handleCurrentBalance();
-                    break;
-                case 5:
-                    handleTransactionHistory();
-                    break;
-                case 6:
                     System.out.println("Exiting the application. Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
             }
-        } while (choice != 6);
+        } while (choice != 3);
+    }
+
+    public void playerMenu() {
+        int choice;
+        do {
+            showPlayerMenu();
+            choice = getUserChoice();
+            switch (choice) {
+                case 1:
+                    handleTransaction();
+                    break;
+                case 2:
+                    handleCurrentBalance();
+                    break;
+                case 3:
+                    handleTransactionHistory();
+                    break;
+                case 4:
+                    System.out.println("Logout");
+                    authorizedPlayer = null;
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please select a valid option.");
+            }
+        } while (choice != 4);
     }
 
     public int getUserChoice() {
@@ -75,9 +99,9 @@ public class ConsoleUserInterface {
         Player registeredPlayer = playerService.registerPlayer(username, password);
         if (registeredPlayer != null) {
             System.out.println("Player registered successfully.");
-            System.out.println("Player ID: " + registeredPlayer.getPlayerId());
+            System.out.println("Player ID: " + registeredPlayer.getPlayerId() + "\n");
         } else {
-            System.out.println("Registration failed. Please try again.");
+            System.out.println("Registration failed. Please try again.\n");
         }
     }
 
@@ -88,19 +112,19 @@ public class ConsoleUserInterface {
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
 
-        Player authorizedPlayer = playerService.authorizePlayer(username, password);
+        authorizedPlayer = playerService.authorizePlayer(username, password);
         if (authorizedPlayer != null) {
             System.out.println("Authorization successful.");
-            System.out.println("Player ID: " + authorizedPlayer.getPlayerId());
+            System.out.println("Player ID: " + authorizedPlayer.getPlayerId() + "\n");
+            playerMenu();
         } else {
-            System.out.println("Authorization failed. Please check your credentials.");
+            System.out.println("Authorization failed. Please check your credentials.\n");
         }
     }
 
     private void handleTransaction() {
-        scanner.nextLine();  // Consume the newline character
-        System.out.print("Enter your Player ID: ");
-        String playerId = scanner.nextLine();
+        scanner.nextLine();
+        String playerId = authorizedPlayer.getPlayerId();
 
         System.out.print("Enter 'debit' or 'credit': ");
         String transactionType = scanner.nextLine().toLowerCase();
@@ -123,23 +147,21 @@ public class ConsoleUserInterface {
             }
 
             if (success) {
-                System.out.println("Transaction completed successfully.");
+                System.out.println("Transaction completed successfully. \n");
             } else {
-                System.out.println("Transaction failed. Please check your inputs.");
+                System.out.println("Transaction failed. Please check your inputs. \n");
             }
         } else {
-            System.out.println("Invalid transaction type. Please enter 'debit' or 'credit'.");
+            System.out.println("Invalid transaction type. Please enter 'debit' or 'credit'. \n");
         }
     }
 
     private void handleTransactionHistory() {
-        scanner.nextLine();  // Consume the newline character
-        System.out.print("Enter your Player ID: ");
-        String playerId = scanner.nextLine();
+        String playerId = authorizedPlayer.getPlayerId();
 
-        List<Transaction> transactionHistory = transactionService.getTransactionHistory(playerId);
+        List<Transaction> transactionHistory = transactionService.getPlayerTransactionHistory(playerId);
         if (transactionHistory.isEmpty()) {
-            System.out.println("No transaction history found for this player.");
+            System.out.println("No transaction history found for this player. \n");
         } else {
             System.out.println("Transaction History for Player ID: " + playerId);
             for (Transaction transaction : transactionHistory) {
@@ -149,14 +171,13 @@ public class ConsoleUserInterface {
                 System.out.println("Timestamp: " + transaction.getTimestamp());
                 System.out.println("-----------------------");
             }
+            System.out.println();
         }
     }
 
     private void handleCurrentBalance() {
-        scanner.nextLine();  // Consume the newline character
-        System.out.print("Enter your Player ID: ");
-        String playerId = scanner.nextLine();
+        String playerId = authorizedPlayer.getPlayerId();
         double balance = playerService.getPlayerBalance(playerId);
-        System.out.println("Your current balance: " + balance);
+        System.out.println("Your current balance: " + balance + "\n");
     }
 }
