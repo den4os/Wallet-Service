@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class TransactionServiceImpl implements TransactionService {
-    private PlayerRepository playerRepository; // Inject the repository
-    private TransactionRepository transactionRepository; // Inject the repository
+    private final PlayerRepository playerRepository;
+    private final TransactionRepository transactionRepository;
 
     public TransactionServiceImpl(PlayerRepository playerRepository, TransactionRepository transactionRepository) {
         this.playerRepository = playerRepository;

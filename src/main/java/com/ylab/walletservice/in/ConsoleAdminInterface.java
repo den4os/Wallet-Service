@@ -2,10 +2,8 @@ package com.ylab.walletservice.in;
 
 import com.ylab.walletservice.domain.entities.Admin;
 import com.ylab.walletservice.domain.entities.AuditLog;
-import com.ylab.walletservice.domain.entities.Player;
 import com.ylab.walletservice.infrastructure.services.AdminService;
 import com.ylab.walletservice.infrastructure.services.AuditLogService;
-import com.ylab.walletservice.infrastructure.services.PlayerService;
 
 import java.util.List;
 import java.util.Scanner;
@@ -14,15 +12,11 @@ public class ConsoleAdminInterface {
     private final Scanner scanner;
     private final AdminService adminService;
     private final AuditLogService auditLogService;
-    private final PlayerService playerService;
 
-    private Admin authorizedAdmin;
-
-    public ConsoleAdminInterface(AdminService adminService, AuditLogService auditLogService, PlayerService playerService) {
+    public ConsoleAdminInterface(AdminService adminService, AuditLogService auditLogService) {
         this.scanner = new Scanner(System.in);
         this.adminService = adminService;
         this.auditLogService = auditLogService;
-        this.playerService = playerService;
     }
 
     public void showMainMenu() {
@@ -49,17 +43,10 @@ public class ConsoleAdminInterface {
             showMainMenu();
             choice = getUserChoice();
             switch (choice) {
-                case 1:
-                    handleAdminRegistration();
-                    break;
-                case 2:
-                    handleAdminAuthorization();
-                    break;
-                case 3:
-                    System.out.println("Exiting the application. Goodbye!");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
+                case 1 -> handleAdminRegistration();
+                case 2 -> handleAdminAuthorization();
+                case 3 -> System.out.println("Go back");
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         } while (choice != 3);
     }
@@ -70,17 +57,10 @@ public class ConsoleAdminInterface {
             showAdminMenu();
             choice = getUserChoice();
             switch (choice) {
-                case 1:
-                    handleAuditLog();
-                    break;
-                case 2:
-                    handlePlayerAuditLog();
-                    break;
-                case 3:
-                    System.out.println("Logout");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
+                case 1 -> handleAuditLog();
+                case 2 -> handlePlayerAuditLog();
+                case 3 -> System.out.println("Logout");
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         } while (choice != 3);
     }
@@ -112,7 +92,7 @@ public class ConsoleAdminInterface {
         System.out.print("Enter your password: ");
         String password = scanner.nextLine();
 
-        authorizedAdmin = adminService.authorizeAdmin(username, password);
+        Admin authorizedAdmin = adminService.authorizeAdmin(username, password);
         if (authorizedAdmin != null) {
             System.out.println("Authorization successful.");
             System.out.println("Player ID: " + authorizedAdmin.getAdminId() + "\n");

@@ -11,11 +11,11 @@ import java.util.Objects;
  * @since 2023-10-07
  */
 public class Transaction {
-    private String transactionId;
-    private String playerId; // Reference to the player involved
-    private TransactionType type; // Enum for credit or debit
-    private double amount;
-    private LocalDateTime timestamp;
+    private final String transactionId;
+    private String playerId;
+    private final TransactionType type;
+    private final double amount;
+    private final LocalDateTime timestamp;
 
     public Transaction(String transactionId, String playerId, TransactionType type, double amount, LocalDateTime timestamp) {
         this.transactionId = transactionId;
@@ -27,10 +27,6 @@ public class Transaction {
 
     public String getTransactionId() {
         return transactionId;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
     }
 
     public String getPlayerId() {
@@ -45,24 +41,12 @@ public class Transaction {
         return type;
     }
 
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
-
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
-    }
-
     public LocalDateTime getTimestamp() {
         return timestamp;
-    }
-
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
     }
 
     @Override

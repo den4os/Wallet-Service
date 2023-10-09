@@ -12,7 +12,7 @@ import java.util.Objects;
 public class Player {
     private String playerId;
     private String username;
-    private String password;
+    private final String password;
     private double balance;
 
     public Player(String playerId, String username, String password, double balance) {
@@ -40,10 +40,6 @@ public class Player {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public double getBalance() {

@@ -2,40 +2,31 @@ package com.ylab.walletservice.in;
 
 import com.ylab.walletservice.domain.entities.ActionResult;
 import com.ylab.walletservice.domain.entities.ActionType;
+import com.ylab.walletservice.domain.entities.Player;
 import com.ylab.walletservice.domain.entities.Transaction;
-import com.ylab.walletservice.infrastructure.services.AdminService;
 import com.ylab.walletservice.infrastructure.services.AuditLogService;
 import com.ylab.walletservice.infrastructure.services.PlayerService;
 import com.ylab.walletservice.infrastructure.services.TransactionService;
-import com.ylab.walletservice.domain.entities.Player;
 
 import java.util.List;
 import java.util.Scanner;
 
-public class ConsoleUserInterface {
+public class ConsolePlayerInterface {
     private final Scanner scanner;
     private final PlayerService playerService;
     private final TransactionService transactionService;
-    private final AdminService adminService;
     private final AuditLogService auditLogService;
     private Player authorizedPlayer;
 
-    public ConsoleUserInterface(PlayerService playerService, TransactionService transactionService, AdminService adminService, AuditLogService auditLogService) {
+    public ConsolePlayerInterface(Player authorizedPlayer,
+                                  PlayerService playerService,
+                                  TransactionService transactionService,
+                                  AuditLogService auditLogService) {
         this.scanner = new Scanner(System.in);
+        this.authorizedPlayer = authorizedPlayer;
         this.playerService = playerService;
         this.transactionService = transactionService;
-        this.adminService = adminService;
         this.auditLogService = auditLogService;
-    }
-
-    public void showMainMenu() {
-        System.out.println("Welcome to the Wallet Service Console App");
-        System.out.println("1. Register Player");
-        System.out.println("2. Authorize Player");
-        System.out.println("3. Admin panel");
-        System.out.println("4. Exit");
-        System.out.print("Please select an option: ");
-        System.out.println();
     }
 
     public void showPlayerMenu() {
@@ -48,114 +39,23 @@ public class ConsoleUserInterface {
         System.out.println();
     }
 
-    public void start() {
-        int choice;
-        do {
-            showMainMenu();
-            choice = getUserChoice();
-            switch (choice) {
-                case 1:
-                    handlePlayerRegistration();
-                    break;
-                case 2:
-                    handlePlayerAuthorization();
-                    break;
-                case 3:
-                    adminInterface();
-                    break;
-                case 4:
-                    System.out.println("Exiting the application. Goodbye!");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-            }
-        } while (choice != 4);
-    }
-
     public void playerMenu() {
         int choice;
         do {
             showPlayerMenu();
             choice = getUserChoice();
             switch (choice) {
-                case 1:
-                    handleTransaction();
-                    break;
-                case 2:
-                    handleCurrentBalance();
-                    break;
-                case 3:
-                    handleTransactionHistory();
-                    break;
-                case 4:
-                    logout();
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
+                case 1 -> handleTransaction();
+                case 2 -> handleCurrentBalance();
+                case 3 -> handleTransactionHistory();
+                case 4 -> logout();
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         } while (choice != 4);
     }
 
     public int getUserChoice() {
         return scanner.nextInt();
-    }
-
-    private void adminInterface() {
-        ConsoleAdminInterface consoleAdminInterface = new ConsoleAdminInterface(adminService, auditLogService, playerService);
-        consoleAdminInterface.start();
-    }
-
-    private int logout() {
-        System.out.println("Logout");
-        auditLogService.addAuditLog(authorizedPlayer.getPlayerId(),
-                ActionType.PLAYER_LOGOUT,
-                ActionResult.SUCCESS);
-        authorizedPlayer = null;
-        return 4;
-    }
-    private void handlePlayerRegistration() {
-        scanner.nextLine();
-        System.out.print("Enter a username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter a password: ");
-        String password = scanner.nextLine();
-
-        Player registeredPlayer = playerService.registerPlayer(username, password);
-        if (registeredPlayer != null) {
-            System.out.println("Player registered successfully.");
-            System.out.println("Player ID: " + registeredPlayer.getPlayerId() + "\n");
-            auditLogService.addAuditLog(registeredPlayer.getPlayerId(),
-                    ActionType.PLAYER_REGISTRATION,
-                    ActionResult.SUCCESS);
-        } else {
-            System.out.println("Registration failed. Please try again.\n");
-            auditLogService.addAuditLog("Unknown",
-                    ActionType.PLAYER_REGISTRATION,
-                    ActionResult.FAILURE);
-        }
-    }
-
-    private void handlePlayerAuthorization() {
-        scanner.nextLine();  // Consume the newline character
-        System.out.print("Enter your username: ");
-        String username = scanner.nextLine();
-        System.out.print("Enter your password: ");
-        String password = scanner.nextLine();
-
-        authorizedPlayer = playerService.authorizePlayer(username, password);
-        if (authorizedPlayer != null) {
-            System.out.println("Authorization successful.");
-            System.out.println("Player ID: " + authorizedPlayer.getPlayerId() + "\n");
-            auditLogService.addAuditLog(authorizedPlayer.getPlayerId(),
-                    ActionType.PLAYER_AUTHORIZATION,
-                    ActionResult.SUCCESS);
-            playerMenu();
-        } else {
-            System.out.println("Authorization failed. Please check your credentials.\n");
-            auditLogService.addAuditLog("Unknown",
-                    ActionType.PLAYER_AUTHORIZATION,
-                    ActionResult.FAILURE);
-        }
     }
 
     private void handleTransaction() {
@@ -248,5 +148,13 @@ public class ConsoleUserInterface {
         auditLogService.addAuditLog(authorizedPlayer.getPlayerId(),
                 ActionType.PLAYER_BALANCE,
                 ActionResult.SUCCESS);
+    }
+
+    private void logout() {
+        System.out.println("Logout");
+        auditLogService.addAuditLog(authorizedPlayer.getPlayerId(),
+                ActionType.PLAYER_LOGOUT,
+                ActionResult.SUCCESS);
+        authorizedPlayer = null;
     }
 }

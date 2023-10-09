@@ -8,7 +8,6 @@ import com.ylab.walletservice.domain.repositories.AuditLogRepository;
 import com.ylab.walletservice.domain.repositories.PlayerRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

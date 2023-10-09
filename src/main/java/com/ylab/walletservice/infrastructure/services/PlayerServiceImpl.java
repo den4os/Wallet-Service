@@ -4,7 +4,7 @@ import com.ylab.walletservice.domain.entities.Player;
 import com.ylab.walletservice.domain.repositories.PlayerRepository;
 
 public class PlayerServiceImpl implements PlayerService {
-    private PlayerRepository playerRepository; // Inject the repository
+    private final PlayerRepository playerRepository; // Inject the repository
     private int playerIdCount = 1;
 
     public PlayerServiceImpl(PlayerRepository playerRepository) {
@@ -42,16 +42,5 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         return -1;
-    }
-
-    @Override
-    public void updatePlayerBalance(String playerId, double amount) {
-        Player player = playerRepository.findById(playerId);
-        if (player != null) {
-            double newBalance = player.getBalance() + amount;
-            player.setBalance(newBalance);
-
-            playerRepository.save(player);
-        }
     }
 }

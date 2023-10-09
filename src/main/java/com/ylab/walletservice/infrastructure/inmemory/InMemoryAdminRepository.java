@@ -10,11 +10,6 @@ public class InMemoryAdminRepository implements AdminRepository {
     private final Map<String, Admin> admins = new HashMap<>();
 
     @Override
-    public Admin findById(String adminId) {
-        return admins.get(adminId);
-    }
-
-    @Override
     public Admin findByUsername(String username) {
         return admins.values().stream()
                 .filter(admin -> admin.getUsername().equals(username))

@@ -8,6 +8,6 @@ package com.ylab.walletservice.domain.entities;
  * @since 2023-10-07
  */
 public enum TransactionType {
-    DEBIT,  // Debit transaction (withdrawal)
-    CREDIT  // Credit transaction (replenishment of funds)
+    DEBIT,
+    CREDIT
 }

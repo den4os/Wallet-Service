@@ -5,10 +5,10 @@ import java.util.Objects;
 
 public class AuditLog {
 
-    private ActionType actionType;
+    private final ActionType actionType;
     private String playerId;
-    private LocalDateTime timestamp;
-    private ActionResult result;
+    private final LocalDateTime timestamp;
+    private final ActionResult result;
 
     public AuditLog(String playerId, ActionType actionType, ActionResult result, LocalDateTime timestamp) {
         this.playerId = playerId;
@@ -19,10 +19,6 @@ public class AuditLog {
 
     public ActionType getActionType() {
         return actionType;
-    }
-
-    public void setActionType(ActionType actionType) {
-        this.actionType = actionType;
     }
 
     public String getPlayerId() {
@@ -37,16 +33,8 @@ public class AuditLog {
         return timestamp;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-
     public ActionResult getResult() {
         return result;
-    }
-
-    public void setResult(ActionResult result) {
-        this.result = result;
     }
 
     @Override

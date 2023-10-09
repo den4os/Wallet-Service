@@ -4,7 +4,7 @@ import com.ylab.walletservice.domain.repositories.AdminRepository;
 import com.ylab.walletservice.domain.repositories.AuditLogRepository;
 import com.ylab.walletservice.domain.repositories.PlayerRepository;
 import com.ylab.walletservice.domain.repositories.TransactionRepository;
-import com.ylab.walletservice.in.ConsoleUserInterface;
+import com.ylab.walletservice.in.ConsoleAuthorizationInterface;
 import com.ylab.walletservice.infrastructure.inmemory.InMemoryAdminRepository;
 import com.ylab.walletservice.infrastructure.inmemory.InMemoryAuditLogRepository;
 import com.ylab.walletservice.infrastructure.inmemory.InMemoryPlayerRepository;
@@ -21,8 +21,8 @@ public class Application {
         AdminService adminService = new AdminServiceImpl(adminRepository);
         AuditLogRepository auditLogRepository = new InMemoryAuditLogRepository();
         AuditLogService auditLogService = new AuditLogServiceImpl(auditLogRepository, playerRepository);
-        ConsoleUserInterface consoleUserInterface = new ConsoleUserInterface(playerService, transactionService, adminService, auditLogService);
+        ConsoleAuthorizationInterface consoleAuthorizationInterface = new ConsoleAuthorizationInterface(playerService, transactionService, adminService, auditLogService);
 
-        consoleUserInterface.start();
+        consoleAuthorizationInterface.start();
     }
 }

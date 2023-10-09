@@ -3,9 +3,9 @@ package com.ylab.walletservice.domain.entities;
 import java.util.Objects;
 
 public class Admin {
-    private String adminId;
+    private final String adminId;
     private String username;
-    private String password;
+    private final String password;
 
     public Admin(String adminId, String username, String password) {
         this.adminId = adminId;
@@ -15,10 +15,6 @@ public class Admin {
 
     public String getAdminId() {
         return adminId;
-    }
-
-    public void setAdminId(String adminId) {
-        this.adminId = adminId;
     }
 
     public String getUsername() {
@@ -31,10 +27,6 @@ public class Admin {
 
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     @Override
