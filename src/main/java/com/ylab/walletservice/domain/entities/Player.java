@@ -12,7 +12,7 @@ import java.util.Objects;
 public class Player {
     private String playerId;
     private String username;
-    private String password; // For authorization
+    private String password;
     private double balance;
 
     public Player(String playerId, String username, String password, double balance) {

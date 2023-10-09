@@ -3,9 +3,7 @@ package com.ylab.walletservice.infrastructure.inmemory;
 import com.ylab.walletservice.domain.entities.Player;
 import com.ylab.walletservice.domain.repositories.PlayerRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class InMemoryPlayerRepository implements PlayerRepository {
@@ -18,12 +16,10 @@ public class InMemoryPlayerRepository implements PlayerRepository {
 
     @Override
     public Player findByUsername(String username) {
-        for (Player player : players.values()) {
-            if (player.getUsername().equals(username)) {
-                return player;
-            }
-        }
-        return null;
+        return players.values().stream()
+                .filter(player -> player.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override

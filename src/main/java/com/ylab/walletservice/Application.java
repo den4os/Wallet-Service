@@ -1,14 +1,15 @@
 package com.ylab.walletservice;
 
+import com.ylab.walletservice.domain.repositories.AdminRepository;
+import com.ylab.walletservice.domain.repositories.AuditLogRepository;
 import com.ylab.walletservice.domain.repositories.PlayerRepository;
 import com.ylab.walletservice.domain.repositories.TransactionRepository;
 import com.ylab.walletservice.in.ConsoleUserInterface;
+import com.ylab.walletservice.infrastructure.inmemory.InMemoryAdminRepository;
+import com.ylab.walletservice.infrastructure.inmemory.InMemoryAuditLogRepository;
 import com.ylab.walletservice.infrastructure.inmemory.InMemoryPlayerRepository;
 import com.ylab.walletservice.infrastructure.inmemory.InMemoryTransactionRepository;
-import com.ylab.walletservice.infrastructure.services.PlayerService;
-import com.ylab.walletservice.infrastructure.services.PlayerServiceImpl;
-import com.ylab.walletservice.infrastructure.services.TransactionService;
-import com.ylab.walletservice.infrastructure.services.TransactionServiceImpl;
+import com.ylab.walletservice.infrastructure.services.*;
 
 public class Application {
     public static void main(String[] args) {
@@ -16,7 +17,11 @@ public class Application {
         PlayerService playerService = new PlayerServiceImpl(playerRepository);
         TransactionRepository transactionRepository = new InMemoryTransactionRepository();
         TransactionService transactionService = new TransactionServiceImpl(playerRepository, transactionRepository);
-        ConsoleUserInterface consoleUserInterface = new ConsoleUserInterface(playerService, transactionService);
+        AdminRepository adminRepository = new InMemoryAdminRepository();
+        AdminService adminService = new AdminServiceImpl(adminRepository);
+        AuditLogRepository auditLogRepository = new InMemoryAuditLogRepository();
+        AuditLogService auditLogService = new AuditLogServiceImpl(auditLogRepository, playerRepository);
+        ConsoleUserInterface consoleUserInterface = new ConsoleUserInterface(playerService, transactionService, adminService, auditLogService);
 
         consoleUserInterface.start();
     }
