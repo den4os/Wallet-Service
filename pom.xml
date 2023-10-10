@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ylab.walletservice</groupId>
+    <groupId>io.ylab.walletservice</groupId>
     <artifactId>Wallet-Service</artifactId>
     <version>0.1-SNAPSHOT</version>
 
@@ -26,15 +26,13 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+    <dependencies><!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.12.4</version>
+            <version>4.11.0</version>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.junit.jupiter</groupId>
