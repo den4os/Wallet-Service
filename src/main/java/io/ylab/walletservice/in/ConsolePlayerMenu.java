@@ -4,28 +4,44 @@ import io.ylab.walletservice.domain.entities.ActionResult;
 import io.ylab.walletservice.domain.entities.ActionType;
 import io.ylab.walletservice.domain.entities.Player;
 import io.ylab.walletservice.domain.entities.Transaction;
-import io.ylab.walletservice.infrastructure.services.AuditLogService;
-import io.ylab.walletservice.infrastructure.services.PlayerService;
-import io.ylab.walletservice.infrastructure.services.TransactionService;
 
 import java.util.List;
-import java.util.Scanner;
 
+/**
+ * This class represents the console interface for the player's personal area in the Wallet Service.
+ * It allows players to perform transactions, check their current balance, view transaction history, and log out.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-10
+ */
 public class ConsolePlayerMenu implements ConsoleInterface {
-    private ConsoleInterfaceManager interfaceManager;
-    private ServiceContainer serviceContainer;
+    private final ConsoleInterfaceManager interfaceManager;
+    private final ServiceContainer serviceContainer;
     private Player authorizedPlayer;
-    private final Scanner scanner;
+    private final ConsoleUserInput consoleUserInput;
 
+    /**
+     * Initializes a new instance of the {@code ConsolePlayerMenu} class with the provided dependencies.
+     *
+     * @param interfaceManager   The manager for console interfaces.
+     * @param serviceContainer  The container for various services.
+     * @param authorizedPlayer  The player authorized to access this console.
+     * @param consoleUserInput  The user input provider for the console.
+     */
     public ConsolePlayerMenu(ConsoleInterfaceManager interfaceManager,
                              ServiceContainer serviceContainer,
-                             Player authorizedPlayer) {
+                             Player authorizedPlayer,
+                             ConsoleUserInput consoleUserInput) {
         this.interfaceManager = interfaceManager;
         this.serviceContainer = serviceContainer;
         this.authorizedPlayer = authorizedPlayer;
-        this.scanner = new Scanner(System.in);
+        this.consoleUserInput = consoleUserInput;
     }
 
+    /**
+     * Displays the main menu for the player's personal area.
+     */
     public void showMainMenu() {
         System.out.println("Personal Area");
         System.out.println("1. Perform Transaction");
@@ -36,6 +52,11 @@ public class ConsolePlayerMenu implements ConsoleInterface {
         System.out.println();
     }
 
+    /**
+     * Handles user input from the main menu.
+     *
+     * @param choice The user's choice from the main menu.
+     */
     public void handleMainMenuInput(String choice) {
         switch (choice) {
             case "1" -> handleTransaction();
@@ -43,27 +64,30 @@ public class ConsolePlayerMenu implements ConsoleInterface {
             case "3" -> handleTransactionHistory();
             case "4" -> logout();
             default -> {
-                showMainMenu();
-                System.out.println("Invalid choice. Please select a valid option.");
+                System.out.println("Invalid choice. Please select a valid option.\n");
             }
         }
     }
 
+    /**
+     * Handles the process of performing a transaction by the player.
+     */
     private void handleTransaction() {
         String playerId = authorizedPlayer.getPlayerId();
         System.out.print("Enter 'debit' or 'credit': ");
-        String transactionType = scanner.nextLine().toLowerCase();
+        String transactionType = consoleUserInput.getNextLine().toLowerCase();
 
         if (transactionType.equals("debit") || transactionType.equals("credit")) {
             System.out.print("Enter transaction amount: ");
-            double amount = scanner.nextDouble();
+            double amount = Double.parseDouble(consoleUserInput.getNextLine());
 
             boolean success;
             if (transactionType.equals("debit")) {
                 System.out.print("Enter a unique transaction ID: ");
-                scanner.nextLine();
-                String transactionId = scanner.nextLine();
-                success = serviceContainer.getTransactionService().performDebitTransaction(playerId, transactionId, amount);
+                String transactionId = consoleUserInput.getNextLine();
+                success = serviceContainer.getTransactionService().performDebitTransaction(playerId,
+                        transactionId,
+                        amount);
                 if(success) {
                     serviceContainer.getAuditLogService().addAuditLog(authorizedPlayer.getPlayerId(),
                             ActionType.DEBIT_TRANSACTION,
@@ -75,9 +99,10 @@ public class ConsolePlayerMenu implements ConsoleInterface {
                 }
             } else {
                 System.out.print("Enter a unique transaction ID: ");
-                scanner.nextLine();
-                String transactionId = scanner.nextLine();
-                success = serviceContainer.getTransactionService().performCreditTransaction(playerId, transactionId, amount);
+                String transactionId = consoleUserInput.getNextLine();
+                success = serviceContainer.getTransactionService().performCreditTransaction(playerId,
+                        transactionId,
+                        amount);
                 if(success) {
                     serviceContainer.getAuditLogService().addAuditLog(authorizedPlayer.getPlayerId(),
                             ActionType.CREDIT_TRANSACTION,
@@ -108,10 +133,16 @@ public class ConsolePlayerMenu implements ConsoleInterface {
         }
     }
 
+    /**
+     * Handles the process of viewing the transaction history for the player.
+     */
     private void handleTransactionHistory() {
         String playerId = authorizedPlayer.getPlayerId();
 
-        List<Transaction> transactionHistory = serviceContainer.getTransactionService().getPlayerTransactionHistory(playerId);
+        List<Transaction> transactionHistory = serviceContainer
+                .getTransactionService()
+                .getPlayerTransactionHistory(playerId);
+
         if (transactionHistory.isEmpty()) {
             System.out.println("No transaction history found for this player. \n");
         } else {
@@ -125,11 +156,15 @@ public class ConsolePlayerMenu implements ConsoleInterface {
             }
             System.out.println();
         }
+
         serviceContainer.getAuditLogService().addAuditLog(authorizedPlayer.getPlayerId(),
                 ActionType.TRANSACTION_HISTORY,
                 ActionResult.SUCCESS);
     }
 
+    /**
+     * Handles the process of checking and displaying the player's current balance.
+     */
     private void handleCurrentBalance() {
         String playerId = authorizedPlayer.getPlayerId();
         double balance = serviceContainer.getPlayerService().getPlayerBalance(playerId);
@@ -139,11 +174,15 @@ public class ConsolePlayerMenu implements ConsoleInterface {
                 ActionResult.SUCCESS);
     }
 
+    /**
+     * Logs out the authorized player and exits the personal area.
+     */
     private void logout() {
         System.out.println("Logout");
         serviceContainer.getAuditLogService().addAuditLog(authorizedPlayer.getPlayerId(),
                 ActionType.PLAYER_LOGOUT,
                 ActionResult.SUCCESS);
         authorizedPlayer = null;
+        interfaceManager.popInterface();
     }
 }

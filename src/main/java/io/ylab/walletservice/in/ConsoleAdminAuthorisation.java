@@ -2,21 +2,39 @@ package io.ylab.walletservice.in;
 
 import io.ylab.walletservice.domain.entities.Admin;
 
-import java.util.Scanner;
-
+/**
+ * This class represents the console interface for administrator authorization and registration in the Wallet Service.
+ * It allows administrators to register as new admins or authorize existing admins. It also provides an option to return
+ * to the main menu.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-10
+ */
 public class ConsoleAdminAuthorisation implements ConsoleInterface {
 
-    private ConsoleInterfaceManager interfaceManager;
-    private ServiceContainer serviceContainer;
-    private final Scanner scanner;
+    private final ConsoleInterfaceManager interfaceManager;
+    private final ServiceContainer serviceContainer;
+    private final ConsoleUserInput consoleUserInput;
 
+    /**
+     * Initializes a new instance of the {@code ConsoleAdminAuthorisation} class with the provided dependencies.
+     *
+     * @param interfaceManager   The manager for console interfaces.
+     * @param serviceContainer  The container for various services.
+     * @param consoleUserInput  The user input provider for the console.
+     */
     public ConsoleAdminAuthorisation(ConsoleInterfaceManager interfaceManager,
-                                     ServiceContainer serviceContainer) {
+                                     ServiceContainer serviceContainer,
+                                     ConsoleUserInput consoleUserInput) {
         this.interfaceManager = interfaceManager;
         this.serviceContainer = serviceContainer;
-        this.scanner = new Scanner(System.in);
+        this.consoleUserInput = consoleUserInput;
     }
 
+    /**
+     * Displays the main menu for administrator authorization and registration.
+     */
     public void showMainMenu() {
         System.out.println("Administrator authorization");
         System.out.println("1. Register Admin");
@@ -26,23 +44,30 @@ public class ConsoleAdminAuthorisation implements ConsoleInterface {
         System.out.println();
     }
 
+    /**
+     * Handles user input from the main menu.
+     *
+     * @param choice The user's choice from the main menu.
+     */
     public void handleMainMenuInput(String choice) {
         switch (choice) {
             case "1" -> handleAdminRegistration();
             case "2" -> handleAdminAuthorization();
             case "3" -> interfaceManager.popInterface();
             default -> {
-                showMainMenu();
-                System.out.println("Invalid choice. Please select a valid option.");
+                System.out.println("Invalid choice. Please select a valid option.\n");
             }
         }
     }
 
+    /**
+     * Handles admin registration process.
+     */
     public void handleAdminRegistration() {
         System.out.print("Enter a username: ");
-        String username = scanner.nextLine();
+        String username = consoleUserInput.getNextLine();
         System.out.print("Enter a password: ");
-        String password = scanner.nextLine();
+        String password = consoleUserInput.getNextLine();
 
         Admin registeredAdmin = serviceContainer.getAdminService().registerAdmin(username, password);
         if (registeredAdmin != null) {
@@ -53,11 +78,14 @@ public class ConsoleAdminAuthorisation implements ConsoleInterface {
         }
     }
 
+    /**
+     * Handles admin authorization process.
+     */
     public void handleAdminAuthorization() {
         System.out.print("Enter your username: ");
-        String username = scanner.nextLine();
+        String username = consoleUserInput.getNextLine();
         System.out.print("Enter your password: ");
-        String password = scanner.nextLine();
+        String password = consoleUserInput.getNextLine();
 
         Admin authorizedAdmin = serviceContainer.getAdminService().authorizeAdmin(username, password);
         if (authorizedAdmin != null) {
@@ -69,9 +97,14 @@ public class ConsoleAdminAuthorisation implements ConsoleInterface {
         }
     }
 
+    /**
+     * Initiates the administrator login process.
+     *
+     * @param authorizedAdmin The authorized admin.
+     */
     private void adminLogin(Admin authorizedAdmin) {
         if (authorizedAdmin != null) {
-            interfaceManager.pushInterface(new ConsoleAdminMenu(interfaceManager, serviceContainer));
+            interfaceManager.pushInterface(new ConsoleAdminMenu(interfaceManager, serviceContainer, consoleUserInput));
             interfaceManager.start();
         } else {
             System.out.println("Authorisation failed.");

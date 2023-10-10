@@ -7,7 +7,7 @@ import java.util.Objects;
  *
  * @author Denis Zanin
  * @version 1.0
- * @since 2023-10-07
+ * @since 2023-10-10
  */
 public class Player {
     private String playerId;
@@ -15,6 +15,14 @@ public class Player {
     private final String password;
     private double balance;
 
+    /**
+     * Creates a new player with the specified parameters.
+     *
+     * @param playerId The unique identifier of the player.
+     * @param username The username of the player.
+     * @param password The password of the player.
+     * @param balance  The initial balance of the player's account.
+     */
     public Player(String playerId, String username, String password, double balance) {
         this.playerId = playerId;
         this.username = username;
@@ -55,7 +63,10 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return Double.compare(balance, player.balance) == 0 && Objects.equals(playerId, player.playerId) && Objects.equals(username, player.username) && Objects.equals(password, player.password);
+        return Double.compare(balance, player.balance) == 0
+                && Objects.equals(playerId, player.playerId)
+                && Objects.equals(username, player.username)
+                && Objects.equals(password, player.password);
     }
 
     @Override

@@ -21,7 +21,6 @@ class PlayerServiceImplTest {
 
     @Test
     void testRegisterPlayer() {
-        Player newPlayer = new Player("1", "SamplePlayer", "password", 0.0);
         playerService.registerPlayer("SamplePlayer", "password");
         verify(playerRepository, times(1)).save(argThat(player ->
                 player.getUsername().equals("SamplePlayer") &&

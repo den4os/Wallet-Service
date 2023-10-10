@@ -5,7 +5,7 @@ package io.ylab.walletservice.domain.entities;
  *
  * @author Denis Zanin
  * @version 1.0
- * @since 2023-10-07
+ * @since 2023-10-10
  */
 public enum TransactionType {
     DEBIT,

@@ -9,15 +9,42 @@ import io.ylab.walletservice.domain.repositories.TransactionRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * This class implements the {@link TransactionService} interface and provides functionality
+ * for managing player transactions in the system.
+ * It allows for performing debit and credit transactions, as well as retrieving transaction history
+ * for a specific player.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-10
+ */
 public class TransactionServiceImpl implements TransactionService {
+
     private final PlayerRepository playerRepository;
     private final TransactionRepository transactionRepository;
 
+    /**
+     * Initializes a new instance of the {@code TransactionServiceImpl} class with the provided player repository
+     * and transaction repository.
+     *
+     * @param playerRepository      The repository used to store and retrieve player entities.
+     * @param transactionRepository The repository used to store and retrieve transaction entities.
+     */
     public TransactionServiceImpl(PlayerRepository playerRepository, TransactionRepository transactionRepository) {
         this.playerRepository = playerRepository;
         this.transactionRepository = transactionRepository;
     }
 
+    /**
+     * Performs a debit transaction for a player, deducting a specified amount from their balance.
+     *
+     * @param playerId      The ID of the player for whom the transaction is performed.
+     * @param transactionId The unique ID of the transaction.
+     * @param amount        The amount to deduct from the player's balance.
+     * @return `true` if the transaction is successful, `false` if the transaction fails
+     * (e.g., insufficient balance or duplicate transaction ID).
+     */
     @Override
     public boolean performDebitTransaction(String playerId, String transactionId, double amount) {
         Player player = playerRepository.findById(playerId);
@@ -25,7 +52,11 @@ public class TransactionServiceImpl implements TransactionService {
         if (player != null && player.getBalance() >= amount) {
             if (!transactionRepository.getAllTransactions().containsKey(transactionId)) {
                 LocalDateTime timestamp = LocalDateTime.now();
-                Transaction debitTransaction = new Transaction(transactionId, playerId, TransactionType.DEBIT, amount, timestamp);
+                Transaction debitTransaction = new Transaction(transactionId,
+                        playerId,
+                        TransactionType.DEBIT,
+                        amount,
+                        timestamp);
 
                 double newBalance = player.getBalance() - amount;
                 player.setBalance(newBalance);
@@ -40,6 +71,15 @@ public class TransactionServiceImpl implements TransactionService {
         return false;
     }
 
+    /**
+     * Performs a credit transaction for a player, adding a specified amount to their balance.
+     *
+     * @param playerId      The ID of the player for whom the transaction is performed.
+     * @param transactionId The unique ID of the transaction.
+     * @param amount        The amount to add to the player's balance.
+     * @return `true` if the transaction is successful, `false` if the transaction fails
+     * (e.g., invalid player ID or duplicate transaction ID).
+     */
     @Override
     public boolean performCreditTransaction(String playerId, String transactionId, double amount) {
         Player player = playerRepository.findById(playerId);
@@ -47,7 +87,11 @@ public class TransactionServiceImpl implements TransactionService {
         if (player != null) {
             if (!transactionRepository.getAllTransactions().containsKey(transactionId)) {
                 LocalDateTime timestamp = LocalDateTime.now();
-                Transaction creditTransaction = new Transaction(transactionId, playerId, TransactionType.CREDIT, amount, timestamp);
+                Transaction creditTransaction = new Transaction(transactionId,
+                        playerId,
+                        TransactionType.CREDIT,
+                        amount,
+                        timestamp);
 
                 double newBalance = player.getBalance() + amount;
                 player.setBalance(newBalance);
@@ -63,6 +107,12 @@ public class TransactionServiceImpl implements TransactionService {
         return false;
     }
 
+    /**
+     * Retrieves the transaction history for a specific player.
+     *
+     * @param playerId The ID of the player for whom the transaction history is retrieved.
+     * @return A list of transaction entities representing the player's transaction history.
+     */
     @Override
     public List<Transaction> getPlayerTransactionHistory(String playerId) {
         return transactionRepository.getTransactionsByPlayerId(playerId);

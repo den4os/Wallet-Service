@@ -4,20 +4,38 @@ import io.ylab.walletservice.domain.entities.ActionResult;
 import io.ylab.walletservice.domain.entities.ActionType;
 import io.ylab.walletservice.domain.entities.Player;
 
-import java.util.Scanner;
-
+/**
+ * This class represents the console interface for player authorization and registration in the Wallet Service.
+ * It allows users to register as new players or authorize existing players. It also provides access to the
+ * admin panel and an option to exit the application.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-10
+ */
 public class ConsoleAuthorization implements ConsoleInterface {
-    private ConsoleInterfaceManager interfaceManager;
-    private ServiceContainer serviceContainer;
-    private final Scanner scanner;
+    private final ConsoleInterfaceManager interfaceManager;
+    private final ServiceContainer serviceContainer;
+    private final ConsoleUserInput consoleUserInput;
 
+    /**
+     * Initializes a new instance of the {@code ConsoleAuthorization} class with the provided dependencies.
+     *
+     * @param interfaceManager   The manager for console interfaces.
+     * @param serviceContainer  The container for various services.
+     * @param consoleUserInput  The user input provider for the console.
+     */
     public ConsoleAuthorization(ConsoleInterfaceManager interfaceManager,
-                                ServiceContainer serviceContainer) {
+                                ServiceContainer serviceContainer,
+                                ConsoleUserInput consoleUserInput) {
         this.interfaceManager = interfaceManager;
         this.serviceContainer = serviceContainer;
-        this.scanner = new Scanner(System.in);
+        this.consoleUserInput = consoleUserInput;
     }
 
+    /**
+     * Displays the main menu for player authorization and registration.
+     */
     public void showMainMenu() {
         System.out.println("Welcome to the Wallet Service Console App");
         System.out.println("1. Register Player");
@@ -28,6 +46,11 @@ public class ConsoleAuthorization implements ConsoleInterface {
         System.out.println();
     }
 
+    /**
+     * Handles user input from the main menu.
+     *
+     * @param choice The user's choice from the main menu.
+     */
     public void handleMainMenuInput(String choice) {
         switch (choice) {
             case "1" -> handlePlayerRegistration();
@@ -38,17 +61,19 @@ public class ConsoleAuthorization implements ConsoleInterface {
                 System.exit(0);
             }
             default ->{
-                showMainMenu();
-                System.out.println("Invalid choice. Please select a valid option.");
+                System.out.println("Invalid choice. Please select a valid option.\n");
             }
         }
     }
 
-    private void handlePlayerRegistration() {
+    /**
+     * Handles player registration process.
+     */
+    public void handlePlayerRegistration() {
         System.out.print("Enter a username: ");
-        String username = scanner.nextLine();
+        String username = consoleUserInput.getNextLine();
         System.out.print("Enter a password: ");
-        String password = scanner.nextLine();
+        String password = consoleUserInput.getNextLine();
 
         Player registeredPlayer = serviceContainer.getPlayerService().registerPlayer(username, password);
         if (registeredPlayer != null) {
@@ -65,11 +90,14 @@ public class ConsoleAuthorization implements ConsoleInterface {
         }
     }
 
-    private void handlePlayerAuthorization() {
+    /**
+     * Handles player authorization process.
+     */
+    public void handlePlayerAuthorization() {
         System.out.print("Enter your username: ");
-        String username = scanner.nextLine();
+        String username = consoleUserInput.getNextLine();
         System.out.print("Enter your password: ");
-        String password = scanner.nextLine();
+        String password = consoleUserInput.getNextLine();
 
         Player authorizedPlayer = serviceContainer.getPlayerService().authorizePlayer(username, password);
         if (authorizedPlayer != null) {
@@ -87,17 +115,31 @@ public class ConsoleAuthorization implements ConsoleInterface {
         }
     }
 
-    private void playerLogin(Player authorizedPlayer) {
+
+    /**
+     * Initiates the player login process.
+     *
+     * @param authorizedPlayer The authorized player.
+     */
+    public void playerLogin(Player authorizedPlayer) {
         if (authorizedPlayer != null) {
-            interfaceManager.pushInterface(new ConsolePlayerMenu(interfaceManager, serviceContainer, authorizedPlayer));
+            interfaceManager.pushInterface(new ConsolePlayerMenu(interfaceManager,
+                    serviceContainer,
+                    authorizedPlayer,
+                    consoleUserInput));
             interfaceManager.start();
         } else {
             System.out.println("Authorisation failed.");
         }
     }
 
-    private void administratorAuthorisation() {
-        interfaceManager.pushInterface(new ConsoleAdminAuthorisation(interfaceManager, serviceContainer));
+    /**
+     * Initiates the administrator authorization process.
+     */
+    public void administratorAuthorisation() {
+        interfaceManager.pushInterface(new ConsoleAdminAuthorisation(interfaceManager,
+                serviceContainer,
+                consoleUserInput));
         interfaceManager.start();
     }
 }
