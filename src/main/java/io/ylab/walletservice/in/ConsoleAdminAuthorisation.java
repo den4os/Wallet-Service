@@ -54,9 +54,7 @@ public class ConsoleAdminAuthorisation implements ConsoleInterface {
             case "1" -> handleAdminRegistration();
             case "2" -> handleAdminAuthorization();
             case "3" -> interfaceManager.popInterface();
-            default -> {
-                System.out.println("Invalid choice. Please select a valid option.\n");
-            }
+            default -> System.out.println("Invalid choice. Please select a valid option.\n");
         }
     }
 

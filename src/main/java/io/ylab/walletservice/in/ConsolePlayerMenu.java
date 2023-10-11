@@ -63,9 +63,7 @@ public class ConsolePlayerMenu implements ConsoleInterface {
             case "2" -> handleCurrentBalance();
             case "3" -> handleTransactionHistory();
             case "4" -> logout();
-            default -> {
-                System.out.println("Invalid choice. Please select a valid option.\n");
-            }
+            default -> System.out.println("Invalid choice. Please select a valid option.\n");
         }
     }
 

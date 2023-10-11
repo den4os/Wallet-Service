@@ -36,4 +36,12 @@ class AdminServiceImplTest {
         assertNotNull(result);
         assertEquals("SampleAdmin", result.getUsername());
     }
+
+    @Test
+    void testAuthorizeAdmin_IncorrectPassword() {
+        Admin existingAdmin = new Admin("1", "SampleAdmin", "password");
+        when(adminRepository.findByUsername("SampleAdmin")).thenReturn(existingAdmin);
+        Admin result = adminService.authorizeAdmin("SampleAdmin", "incorrectPassword");
+        assertNull(result);
+    }
 }

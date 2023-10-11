@@ -54,9 +54,7 @@ public class ConsoleAdminMenu implements ConsoleInterface {
             case "1" -> handleAuditLog();
             case "2" -> handlePlayerAuditLog();
             case "3" -> interfaceManager.popInterface();
-            default -> {
-                System.out.println("Invalid choice. Please select a valid option.\n");
-            }
+            default -> System.out.println("Invalid choice. Please select a valid option.\n");
         }
     }
 

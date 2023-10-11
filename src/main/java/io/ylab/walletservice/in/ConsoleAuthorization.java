@@ -60,9 +60,7 @@ public class ConsoleAuthorization implements ConsoleInterface {
                 System.out.println("Exiting the application. Goodbye!");
                 System.exit(0);
             }
-            default ->{
-                System.out.println("Invalid choice. Please select a valid option.\n");
-            }
+            default -> System.out.println("Invalid choice. Please select a valid option.\n");
         }
     }
 
