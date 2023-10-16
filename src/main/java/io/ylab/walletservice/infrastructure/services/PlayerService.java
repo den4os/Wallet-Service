@@ -2,6 +2,8 @@ package io.ylab.walletservice.infrastructure.services;
 
 import io.ylab.walletservice.domain.entities.Player;
 
+import java.math.BigDecimal;
+
 /**
  * This interface defines the methods for managing player entities in the system.
  * It provides methods for registering a new player, authorizing an existing player,
@@ -38,5 +40,5 @@ public interface PlayerService {
      * @param playerId The ID of the player whose balance is to be retrieved.
      * @return The balance of the player.
      */
-    double getPlayerBalance(String playerId);
+    BigDecimal getPlayerBalance(String playerId);
 }

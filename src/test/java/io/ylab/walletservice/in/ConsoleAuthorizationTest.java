@@ -20,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,7 +54,7 @@ class ConsoleAuthorizationTest {
                 .thenReturn("testuser")
                 .thenReturn("testpassword");
 
-        Player fakePlayer = new Player("1", "testuser", "testpassword", 0.0);
+        Player fakePlayer = new Player("1", "testuser", "testpassword", new BigDecimal("0.0"));
         when(playerService.registerPlayer("testuser", "testpassword")).thenReturn(fakePlayer);
 
         when(serviceContainer.getPlayerService()).thenReturn(playerService);

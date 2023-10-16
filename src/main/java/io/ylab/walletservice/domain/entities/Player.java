@@ -1,5 +1,6 @@
 package io.ylab.walletservice.domain.entities;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -13,7 +14,7 @@ public class Player {
     private String playerId;
     private String username;
     private final String password;
-    private double balance;
+    private BigDecimal balance;
 
     /**
      * Creates a new player with the specified parameters.
@@ -23,7 +24,7 @@ public class Player {
      * @param password The password of the player.
      * @param balance  The initial balance of the player's account.
      */
-    public Player(String playerId, String username, String password, double balance) {
+    public Player(String playerId, String username, String password, BigDecimal balance) {
         this.playerId = playerId;
         this.username = username;
         this.password = password;
@@ -50,11 +51,11 @@ public class Player {
         return password;
     }
 
-    public double getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
@@ -63,10 +64,7 @@ public class Player {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return Double.compare(balance, player.balance) == 0
-                && Objects.equals(playerId, player.playerId)
-                && Objects.equals(username, player.username)
-                && Objects.equals(password, player.password);
+        return Objects.equals(playerId, player.playerId) && Objects.equals(username, player.username) && Objects.equals(password, player.password) && Objects.equals(balance, player.balance);
     }
 
     @Override

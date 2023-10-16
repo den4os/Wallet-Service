@@ -4,6 +4,8 @@ import io.ylab.walletservice.domain.entities.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -18,8 +20,8 @@ public class InMemoryPlayerRepositoryTest {
 
     @Test
     void testFindById() {
-        Player player1 = new Player("1", "Player1", "password1", 100.0);
-        Player player2 = new Player("2", "Player2", "password2", 200.0);
+        Player player1 = new Player("1", "Player1", "password1", new BigDecimal("100.0"));
+        Player player2 = new Player("2", "Player2", "password2", new BigDecimal("200.0"));
 
         playerRepository.save(player1);
         playerRepository.save(player2);
@@ -28,13 +30,13 @@ public class InMemoryPlayerRepositoryTest {
 
         assertNotNull(result);
         assertEquals("Player1", result.getUsername());
-        assertEquals(100.0, result.getBalance());
+        assertEquals(new BigDecimal("100.0"), result.getBalance());
     }
 
     @Test
     void testFindByUsername() {
-        Player player1 = new Player("1", "Player1", "password1", 100.0);
-        Player player2 = new Player("2", "Player2", "password2", 200.0);
+        Player player1 = new Player("1", "Player1", "password1", new BigDecimal("100.0"));
+        Player player2 = new Player("2", "Player2", "password2", new BigDecimal("200.0"));
 
         playerRepository.save(player1);
         playerRepository.save(player2);
@@ -43,12 +45,12 @@ public class InMemoryPlayerRepositoryTest {
 
         assertNotNull(result);
         assertEquals("Player2", result.getUsername());
-        assertEquals(200.0, result.getBalance());
+        assertEquals(new BigDecimal("200.0"), result.getBalance());
     }
 
     @Test
     void testSave() {
-        Player player = new Player("1", "Player", "password", 150.0);
+        Player player = new Player("1", "Player", "password", new BigDecimal("150.0"));
 
         playerRepository.save(player);
 
@@ -56,6 +58,6 @@ public class InMemoryPlayerRepositoryTest {
 
         assertNotNull(result);
         assertEquals("Player", result.getUsername());
-        assertEquals(150.0, result.getBalance());
+        assertEquals(new BigDecimal("150.0"), result.getBalance());
     }
 }

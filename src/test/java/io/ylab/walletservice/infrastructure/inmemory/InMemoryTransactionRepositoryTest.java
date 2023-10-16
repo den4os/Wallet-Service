@@ -5,6 +5,7 @@ import io.ylab.walletservice.domain.entities.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -23,8 +24,8 @@ public class InMemoryTransactionRepositoryTest {
     @Test
     void testSaveTransaction() {
         LocalDateTime timestamp = LocalDateTime.now();
-        Transaction transaction1 = new Transaction("1", "player1", TransactionType.DEBIT, 50.0, timestamp);
-        Transaction transaction2 = new Transaction("2", "player2", TransactionType.CREDIT, 100.0, timestamp);
+        Transaction transaction1 = new Transaction("1", "player1", TransactionType.DEBIT, new BigDecimal("50.0"), timestamp);
+        Transaction transaction2 = new Transaction("2", "player2", TransactionType.CREDIT, new BigDecimal("100.0"), timestamp);
 
         transactionRepository.saveTransaction(transaction1);
         transactionRepository.saveTransaction(transaction2);
@@ -40,9 +41,9 @@ public class InMemoryTransactionRepositoryTest {
     @Test
     void testGetTransactionsByPlayerId() {
         LocalDateTime timestamp = LocalDateTime.now();
-        Transaction transaction1 = new Transaction("1", "player1", TransactionType.DEBIT, 50.0, timestamp);
-        Transaction transaction2 = new Transaction("2", "player1", TransactionType.CREDIT, 100.0, timestamp);
-        Transaction transaction3 = new Transaction("3", "player2", TransactionType.DEBIT, 25.0, timestamp);
+        Transaction transaction1 = new Transaction("1", "player1", TransactionType.DEBIT, new BigDecimal("50.0"), timestamp);
+        Transaction transaction2 = new Transaction("2", "player1", TransactionType.CREDIT, new BigDecimal("100.0"), timestamp);
+        Transaction transaction3 = new Transaction("3", "player2", TransactionType.DEBIT, new BigDecimal("25.0"), timestamp);
 
         transactionRepository.saveTransaction(transaction1);
         transactionRepository.saveTransaction(transaction2);

@@ -1,5 +1,6 @@
 package io.ylab.walletservice.domain.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ public class Transaction {
     private final String transactionId;
     private String playerId;
     private final TransactionType type;
-    private final double amount;
+    private final BigDecimal amount;
     private final LocalDateTime timestamp;
 
     /**
@@ -31,7 +32,7 @@ public class Transaction {
     public Transaction(String transactionId,
                        String playerId,
                        TransactionType type,
-                       double amount,
+                       BigDecimal amount,
                        LocalDateTime timestamp) {
         this.transactionId = transactionId;
         this.playerId = playerId;
@@ -56,7 +57,7 @@ public class Transaction {
         return type;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -69,10 +70,7 @@ public class Transaction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Transaction that = (Transaction) o;
-        return Double.compare(amount, that.amount) == 0
-                && Objects.equals(transactionId, that.transactionId)
-                && Objects.equals(playerId, that.playerId)
-                && type == that.type && Objects.equals(timestamp, that.timestamp);
+        return Objects.equals(transactionId, that.transactionId) && Objects.equals(playerId, that.playerId) && type == that.type && Objects.equals(amount, that.amount) && Objects.equals(timestamp, that.timestamp);
     }
 
     @Override

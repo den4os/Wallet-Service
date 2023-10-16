@@ -5,6 +5,7 @@ import io.ylab.walletservice.domain.entities.ActionType;
 import io.ylab.walletservice.domain.entities.Player;
 import io.ylab.walletservice.domain.entities.Transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -77,7 +78,7 @@ public class ConsolePlayerMenu implements ConsoleInterface {
 
         if (transactionType.equals("debit") || transactionType.equals("credit")) {
             System.out.print("Enter transaction amount: ");
-            double amount = Double.parseDouble(consoleUserInput.getNextLine());
+            BigDecimal amount = new BigDecimal(consoleUserInput.getNextLine());
 
             boolean success;
             if (transactionType.equals("debit")) {
@@ -165,7 +166,7 @@ public class ConsolePlayerMenu implements ConsoleInterface {
      */
     private void handleCurrentBalance() {
         String playerId = authorizedPlayer.getPlayerId();
-        double balance = serviceContainer.getPlayerService().getPlayerBalance(playerId);
+        BigDecimal balance = serviceContainer.getPlayerService().getPlayerBalance(playerId);
         System.out.println("Your current balance: " + balance + "\n");
         serviceContainer.getAuditLogService().addAuditLog(authorizedPlayer.getPlayerId(),
                 ActionType.PLAYER_BALANCE,

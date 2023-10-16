@@ -3,6 +3,8 @@ package io.ylab.walletservice.infrastructure.services;
 import io.ylab.walletservice.domain.entities.Player;
 import io.ylab.walletservice.domain.repositories.PlayerRepository;
 
+import java.math.BigDecimal;
+
 /**
  * This class implements the {@link PlayerService} interface and provides functionality
  * for managing player entities in the system.
@@ -41,7 +43,7 @@ public class PlayerServiceImpl implements PlayerService {
         }
 
         String playerId = Integer.toString(generateUniquePlayerId());
-        Player newPlayer = new Player(playerId, username, password, 0.0);
+        Player newPlayer = new Player(playerId, username, password, new BigDecimal("0.0"));
         playerRepository.save(newPlayer);
 
         return newPlayer;
@@ -80,12 +82,12 @@ public class PlayerServiceImpl implements PlayerService {
      * @return The balance of the player, or -1 if the player ID is not found.
      */
     @Override
-    public double getPlayerBalance(String playerId) {
+    public BigDecimal getPlayerBalance(String playerId) {
         Player player = playerRepository.findById(playerId);
         if (player != null) {
             return player.getBalance();
         }
 
-        return -1;
+        return new BigDecimal("-1");
     }
 }
