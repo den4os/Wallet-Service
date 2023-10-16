@@ -1,5 +1,7 @@
 package io.ylab.walletservice.domain.entities;
 
+import lombok.Data;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -10,9 +12,11 @@ import java.util.Objects;
  * and the result of the action.
  *
  * @author Denis Zanin
- * @version 1.0
+ * @version 1.1
  * @since 2023-10-10
  */
+
+@Data
 public class AuditLog {
 
     private final ActionType actionType;
@@ -33,41 +37,5 @@ public class AuditLog {
         this.actionType = actionType;
         this.result = result;
         this.timestamp = timestamp;
-    }
-
-    public ActionType getActionType() {
-        return actionType;
-    }
-
-    public String getPlayerId() {
-        return playerId;
-    }
-
-    public void setPlayerId(String playerId) {
-        this.playerId = playerId;
-    }
-
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-
-    public ActionResult getResult() {
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AuditLog auditLog = (AuditLog) o;
-        return Objects.equals(actionType, auditLog.actionType)
-                && Objects.equals(playerId, auditLog.playerId)
-                && Objects.equals(timestamp, auditLog.timestamp)
-                && result == auditLog.result;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(actionType, playerId, timestamp, result);
     }
 }
