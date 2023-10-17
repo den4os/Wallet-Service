@@ -1,6 +1,5 @@
 package io.ylab.walletservice.infrastructure.services;
 
-import io.ylab.walletservice.domain.entities.Player;
 import io.ylab.walletservice.domain.entities.Transaction;
 import io.ylab.walletservice.domain.entities.TransactionType;
 import io.ylab.walletservice.domain.repositories.PlayerRepository;
