@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class JdbcAdminRepositoryTest extends AbstractContainerBaseTest {
+public class JdbcAdminRepositoryIT extends AbstractContainerBaseIT {
 
     private JdbcAdminRepository jdbcAdminRepository;
 

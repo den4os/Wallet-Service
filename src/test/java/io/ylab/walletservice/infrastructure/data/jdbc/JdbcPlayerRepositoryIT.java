@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JdbcPlayerRepositoryTest extends AbstractContainerBaseTest {
+class JdbcPlayerRepositoryIT extends AbstractContainerBaseIT {
 
     private JdbcPlayerRepository jdbcPlayerRepository;
 

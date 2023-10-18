@@ -2,22 +2,17 @@ package io.ylab.walletservice.infrastructure.data.jdbc;
 
 import io.ylab.walletservice.domain.entities.Transaction;
 import io.ylab.walletservice.domain.entities.TransactionType;
-import liquibase.Liquibase;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JdbcTransactionRepositoryTest extends AbstractContainerBaseTest {
+class JdbcTransactionRepositoryIT extends AbstractContainerBaseIT {
 
     private JdbcTransactionRepository jdbcTransactionRepository;
 

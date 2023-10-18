@@ -10,7 +10,7 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public abstract class AbstractContainerBaseTest {
+public abstract class AbstractContainerBaseIT {
 
     protected Connection connection;
 

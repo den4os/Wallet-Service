@@ -30,9 +30,6 @@ class ConsoleAuthorizationTest {
     @Mock
     private AuditLogService auditLogService;
 
-    private ConsoleAuthorization consoleAuthorization;
-
-
 
     @Test
     void handlePlayerRegistration() {
@@ -47,7 +44,7 @@ class ConsoleAuthorizationTest {
         when(serviceContainer.getPlayerService()).thenReturn(playerService);
         when(serviceContainer.getAuditLogService()).thenReturn(auditLogService);
 
-        consoleAuthorization = new ConsoleAuthorization(interfaceManager, serviceContainer, consoleUserInput);
+        ConsoleAuthorization consoleAuthorization = new ConsoleAuthorization(interfaceManager, serviceContainer, consoleUserInput);
 
         consoleAuthorization.handlePlayerRegistration();
         verify(playerService, Mockito.times(1)).registerPlayer("testuser", "testpassword");

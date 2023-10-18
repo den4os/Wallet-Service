@@ -6,7 +6,7 @@
 
     <groupId>io.ylab.walletservice</groupId>
     <artifactId>Wallet-Service</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

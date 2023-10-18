@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class JdbcAuditLogRepositoryTest extends AbstractContainerBaseTest {
+class JdbcAuditLogRepositoryIT extends AbstractContainerBaseIT {
 
     private JdbcAuditLogRepository jdbcAuditLogRepository;
 
