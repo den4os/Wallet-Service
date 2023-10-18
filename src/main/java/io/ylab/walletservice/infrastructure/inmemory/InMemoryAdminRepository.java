@@ -44,6 +44,11 @@ public class InMemoryAdminRepository implements AdminRepository {
         admins.put(admin.getAdminId(), admin);
     }
 
+    /**
+     * Generates a unique admin ID for storing a new admin entity in the repository.
+     *
+     * @return A unique admin ID as a string.
+     */
     @Override
     public String generateUniqueAdminId() {
         adminIdCount += 1;

@@ -1,29 +1,31 @@
 package io.ylab.walletservice;
 
-import io.ylab.walletservice.connection.DatabaseConnection;
-import io.ylab.walletservice.connection.PropertyReader;
+import io.ylab.walletservice.connection.*;
 import io.ylab.walletservice.domain.repositories.*;
 import io.ylab.walletservice.in.*;
-import io.ylab.walletservice.infrastructure.data.jdbc.JdbcAdminRepository;
-import io.ylab.walletservice.infrastructure.data.jdbc.JdbcAuditLogRepository;
-import io.ylab.walletservice.infrastructure.data.jdbc.JdbcPlayerRepository;
-import io.ylab.walletservice.infrastructure.data.jdbc.JdbcTransactionRepository;
+import io.ylab.walletservice.infrastructure.data.jdbc.*;
 import io.ylab.walletservice.infrastructure.services.*;
+import liquibase.Contexts;
+import liquibase.LabelExpression;
+import liquibase.Liquibase;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.resource.ClassLoaderResourceAccessor;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Properties;
 
 /**
- * The main application class for the Wallet Service.
- * It initializes the necessary components and starts the console interface.
- * This class sets up the Console User Interface (CUI) for the Wallet Service.
- * It initializes various services, repositories, and user interfaces to allow players
- * and administrators to interact with the wallet system through the console.
- * The main functionality includes player authorization, performing transactions,
- * managing player data, and logging audit information.
- * To run the Wallet Service application, execute the main method within this class.
- * It sets up the required components and starts the user interface.
+ * The primary class to bootstrap the Wallet Service application.
+ * This class initializes all the necessary components, including various services and repositories,
+ * and kicks off the Console User Interface (CUI) to allow both players and administrators to interact
+ * with the wallet functionalities.
+ * Main features include:
+ * - Player Authorization
+ * - Transaction Management
+ * - Player Data Management
+ * - Audit Logging
+ * To start the Wallet Service application, execute the main method in this class, which sets up
+ * all required components and starts the CUI.
  *
  * @author Denis Zanin
  * @version 1.1
@@ -32,11 +34,15 @@ import java.util.Properties;
 public class Application {
 
     /**
-     * The main entry point for the Wallet Service application.
-     * This method initializes the console user input, console interface manager, and various services and repositories.
-     * It then sets up player authorization, initializes the service container, and starts the console user interface.
+     * Serves as the main entry point for the Wallet Service application.
+     * This method performs the following tasks:
+     * - Reads configuration properties
+     * - Establishes a database connection
+     * - Initializes Liquibase for database version control
+     * - Sets up services, repositories, and console interfaces
+     * - Starts the Console User Interface (CUI) for user interactions
      *
-     * @param args The command line arguments (not used in this application).
+     * @param args Command line arguments, not utilized in this specific implementation.
      */
     public static void main(String[] args) {
 
@@ -44,8 +50,13 @@ public class Application {
         String url = properties.getProperty("url");
         String userName = properties.getProperty("username");
         String password = properties.getProperty("password");
+        String changeLogFile = properties.getProperty("changeLogFile");
 
         try (Connection connection = DatabaseConnection.connect(url, userName, password)) {
+
+            JdbcConnection jdbcConnection = new JdbcConnection(connection);
+            Liquibase liquibase = new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), jdbcConnection);
+            liquibase.update(new Contexts(), new LabelExpression());
 
             ConsoleUserInput consoleUserInput = new ConsoleRealConsoleUserInput();
 
@@ -64,6 +75,17 @@ public class Application {
         }
     }
 
+    /**
+     * Initializes and configures a {@link ServiceContainer} object, setting up all the necessary
+     * services and repositories needed for the Wallet Service application.
+     * Specifically, this method performs the following tasks:
+     * - Initializes player, transaction, admin, and audit log repositories
+     * - Sets up corresponding services with the initialized repositories
+     * - Populates the ServiceContainer with these services
+     *
+     * @param connection The established JDBC connection to the database.
+     * @return A fully-configured ServiceContainer object ready for use in the application.
+     */
     private static ServiceContainer getServiceContainer(Connection connection) {
         ServiceContainer serviceContainer = new ServiceContainer();
 

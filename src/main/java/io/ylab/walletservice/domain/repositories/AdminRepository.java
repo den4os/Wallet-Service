@@ -27,5 +27,11 @@ public interface AdminRepository {
      */
     void save(Admin admin);
 
+    /**
+     * Generates and returns a unique identifier for an Admin entity.
+     * This can be used for admin-specific operations that require a unique ID.
+     *
+     * @return A unique identifier string for an Admin entity.
+     */
     String generateUniqueAdminId();
 }

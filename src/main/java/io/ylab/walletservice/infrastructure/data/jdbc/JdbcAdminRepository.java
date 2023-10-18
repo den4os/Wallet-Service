@@ -5,14 +5,33 @@ import io.ylab.walletservice.domain.repositories.AdminRepository;
 
 import java.sql.*;
 
+/**
+ * The JdbcAdminRepository class provides an implementation of the AdminRepository interface.
+ * This class handles CRUD operations for the Admin entity in a JDBC-compatible database.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-18
+ */
 public class JdbcAdminRepository implements AdminRepository {
 
     private final Connection connection;
 
+    /**
+     * Initializes a new JdbcAdminRepository instance with the given database connection.
+     *
+     * @param connection The SQL connection object.
+     */
     public JdbcAdminRepository(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Finds an Admin entity by its username.
+     *
+     * @param username The username to search for.
+     * @return The Admin entity if found, null otherwise.
+     */
     @Override
     public Admin findByUsername(String username) {
         try (PreparedStatement statement = connection.prepareStatement(
@@ -34,6 +53,12 @@ public class JdbcAdminRepository implements AdminRepository {
         return null;
     }
 
+    /**
+     * Saves an Admin entity to the database.
+     *
+     * @param admin The Admin entity to be saved.
+     * @throws RuntimeException if a SQLException occurs during the operation.
+     */
     @Override
     public void save(Admin admin) {
         try {
@@ -72,6 +97,11 @@ public class JdbcAdminRepository implements AdminRepository {
         }
     }
 
+    /**
+     * Generates a unique Admin ID. Currently not implemented.
+     *
+     * @return null.
+     */
     @Override
     public String generateUniqueAdminId() {
         return null;

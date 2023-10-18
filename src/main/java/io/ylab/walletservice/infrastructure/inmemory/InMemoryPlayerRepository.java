@@ -55,11 +55,21 @@ public class InMemoryPlayerRepository implements PlayerRepository {
         players.put(player.getPlayerId(), player);
     }
 
+    /**
+     * Updates the details of an existing player entity in the repository.
+     *
+     * @param player The player entity with updated information.
+     */
     @Override
     public void updatePlayer(Player player) {
         players.put(player.getPlayerId(), player);
     }
 
+    /**
+     * Generates a unique player ID for storing a new player entity.
+     *
+     * @return A string representing the unique player ID.
+     */
     @Override
     public String generateUniquePlayerId() {
         playerIdCount += 1;

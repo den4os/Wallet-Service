@@ -35,7 +35,18 @@ public interface PlayerRepository {
      */
     void save(Player player);
 
+    /**
+     * Generates and returns a unique identifier for a Player entity.
+     * This can be used for player-specific operations that require a unique ID.
+     *
+     * @return A unique identifier string for a Player entity.
+     */
     String generateUniquePlayerId();
 
+    /**
+     * Updates an existing Player entity in the repository.
+     *
+     * @param player The Player entity with updated information.
+     */
     void updatePlayer(Player player);
 }

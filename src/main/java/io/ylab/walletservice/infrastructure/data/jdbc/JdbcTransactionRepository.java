@@ -11,13 +11,32 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The JdbcTransactionRepository class provides an implementation of the TransactionRepository interface.
+ * This class handles CRUD operations for the Transaction entity in a JDBC-compatible database.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-18
+ */
 public class JdbcTransactionRepository implements TransactionRepository {
     private final Connection connection;
 
+    /**
+     * Initializes a new JdbcTransactionRepository instance with the given database connection.
+     *
+     * @param connection The SQL connection object.
+     */
     public JdbcTransactionRepository(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Saves a new Transaction entity to the database.
+     *
+     * @param transaction The Transaction entity to be saved.
+     * @throws RuntimeException if a SQLException occurs during the operation.
+     */
     @Override
     public void saveTransaction(Transaction transaction) {
         try {
@@ -58,6 +77,13 @@ public class JdbcTransactionRepository implements TransactionRepository {
         }
     }
 
+    /**
+     * Retrieves all transactions related to a specific player by their ID.
+     *
+     * @param playerId The player's unique identifier.
+     * @return A list of Transaction entities associated with the given player ID.
+     * @throws RuntimeException if a SQLException occurs during the operation.
+     */
     @Override
     public List<Transaction> getTransactionsByPlayerId(String playerId) {
         List<Transaction> transactions = new ArrayList<>();
@@ -82,6 +108,12 @@ public class JdbcTransactionRepository implements TransactionRepository {
         return transactions;
     }
 
+    /**
+     * Retrieves all transactions from the database.
+     *
+     * @return A map of all Transaction entities, indexed by transaction ID.
+     * @throws RuntimeException if a SQLException occurs during the operation.
+     */
     @Override
     public Map<String, Transaction> getAllTransactions() {
         Map<String, Transaction> transactions = new HashMap<>();

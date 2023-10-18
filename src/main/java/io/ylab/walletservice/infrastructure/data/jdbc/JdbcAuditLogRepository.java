@@ -9,14 +9,33 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The JdbcAuditLogRepository class provides an implementation of the AuditLogRepository interface.
+ * This class handles CRUD operations for the AuditLog entity in a JDBC-compatible database.
+ *
+ * @author Denis Zanin
+ * @version 1.0
+ * @since 2023-10-18
+ */
 public class JdbcAuditLogRepository implements AuditLogRepository {
 
     private final Connection connection;
 
+    /**
+     * Initializes a new JdbcAuditLogRepository instance with the given database connection.
+     *
+     * @param connection The SQL connection object.
+     */
     public JdbcAuditLogRepository(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Saves an AuditLog entity to the database.
+     *
+     * @param log The AuditLog entity to be saved.
+     * @throws RuntimeException if a SQLException occurs during the operation.
+     */
     @Override
     public void saveAuditLog (AuditLog log) {
         try {
@@ -49,6 +68,12 @@ public class JdbcAuditLogRepository implements AuditLogRepository {
         }
     }
 
+    /**
+     * Retrieves a list of all AuditLog entries from the database.
+     *
+     * @return List of AuditLog entries.
+     * @throws RuntimeException if a SQLException occurs during the operation.
+     */
     @Override
     public List<AuditLog> getAuditLogs() {
         List<AuditLog> auditLogs = new ArrayList<>();
