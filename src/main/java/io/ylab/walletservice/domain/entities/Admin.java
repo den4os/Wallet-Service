@@ -13,9 +13,9 @@ import lombok.Data;
 @Data
 public class Admin {
 
-    private final String adminId;
+    private String adminId;
     private String username;
-    private final String password;
+    private String password;
 
     /**
      * Creates a new admin user with the specified parameters.

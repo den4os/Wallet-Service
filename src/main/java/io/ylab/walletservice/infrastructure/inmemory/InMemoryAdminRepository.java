@@ -12,11 +12,13 @@ import java.util.Map;
  * It uses a {@link Map} to store admin entities with their unique IDs.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-17
  */
 public class InMemoryAdminRepository implements AdminRepository {
     private final Map<String, Admin> admins = new HashMap<>();
+
+    private int adminIdCount = 0;
 
     /**
      * Finds an admin entity by the given username.
@@ -40,5 +42,11 @@ public class InMemoryAdminRepository implements AdminRepository {
     @Override
     public void save(Admin admin) {
         admins.put(admin.getAdminId(), admin);
+    }
+
+    @Override
+    public String generateUniqueAdminId() {
+        adminIdCount += 1;
+        return Integer.toString(adminIdCount);
     }
 }

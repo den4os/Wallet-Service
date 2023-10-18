@@ -12,11 +12,13 @@ import java.util.Map;
  * It uses a {@link Map} to store player entities with their unique IDs.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-17
  */
 public class InMemoryPlayerRepository implements PlayerRepository {
     private final Map<String, Player> players = new HashMap<>();
+
+    private int playerIdCount = 0;
 
     /**
      * Finds a player entity by the given player ID.
@@ -51,5 +53,16 @@ public class InMemoryPlayerRepository implements PlayerRepository {
     @Override
     public void save(Player player) {
         players.put(player.getPlayerId(), player);
+    }
+
+    @Override
+    public void updatePlayer(Player player) {
+        players.put(player.getPlayerId(), player);
+    }
+
+    @Override
+    public String generateUniquePlayerId() {
+        playerIdCount += 1;
+        return Integer.toString(playerIdCount);
     }
 }

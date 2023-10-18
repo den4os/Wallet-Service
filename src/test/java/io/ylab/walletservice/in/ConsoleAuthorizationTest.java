@@ -1,5 +1,6 @@
 package io.ylab.walletservice.in;
 
+import io.ylab.walletservice.domain.entities.Player;
 import io.ylab.walletservice.infrastructure.services.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

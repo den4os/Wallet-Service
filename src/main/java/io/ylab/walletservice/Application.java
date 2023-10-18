@@ -1,9 +1,18 @@
 package io.ylab.walletservice;
 
+import io.ylab.walletservice.connection.DatabaseConnection;
+import io.ylab.walletservice.connection.PropertyReader;
 import io.ylab.walletservice.domain.repositories.*;
 import io.ylab.walletservice.in.*;
-import io.ylab.walletservice.infrastructure.inmemory.*;
+import io.ylab.walletservice.infrastructure.data.jdbc.JdbcAdminRepository;
+import io.ylab.walletservice.infrastructure.data.jdbc.JdbcAuditLogRepository;
+import io.ylab.walletservice.infrastructure.data.jdbc.JdbcPlayerRepository;
+import io.ylab.walletservice.infrastructure.data.jdbc.JdbcTransactionRepository;
 import io.ylab.walletservice.infrastructure.services.*;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * The main application class for the Wallet Service.
@@ -17,8 +26,8 @@ import io.ylab.walletservice.infrastructure.services.*;
  * It sets up the required components and starts the user interface.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-18
  */
 public class Application {
 
@@ -31,44 +40,49 @@ public class Application {
      */
     public static void main(String[] args) {
 
-        // Initialize the Console User Input
-        ConsoleUserInput consoleUserInput = new ConsoleRealConsoleUserInput();
+        Properties properties = PropertyReader.readProperties("src/resources/application.properties");
+        String url = properties.getProperty("url");
+        String userName = properties.getProperty("username");
+        String password = properties.getProperty("password");
 
-        // Initialize the Console Interface Manager
-        ConsoleInterfaceManager consoleInterfaceManager = new ConsoleInterfaceManager(consoleUserInput);
+        try (Connection connection = DatabaseConnection.connect(url, userName, password)) {
 
-        // Initialize the Service Container
+            ConsoleUserInput consoleUserInput = new ConsoleRealConsoleUserInput();
+
+            ConsoleInterfaceManager consoleInterfaceManager = new ConsoleInterfaceManager(consoleUserInput);
+
+            ServiceContainer serviceContainer = getServiceContainer(connection);
+
+            ConsoleAuthorization consoleAuthorization = new ConsoleAuthorization(consoleInterfaceManager,
+                    serviceContainer,
+                    consoleUserInput);
+
+            consoleInterfaceManager.pushInterface(consoleAuthorization);
+            consoleInterfaceManager.start();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static ServiceContainer getServiceContainer(Connection connection) {
         ServiceContainer serviceContainer = new ServiceContainer();
 
-        // Initialize Player-related repositories and services
-        PlayerRepository playerRepository = new InMemoryPlayerRepository();
+        PlayerRepository playerRepository = new JdbcPlayerRepository(connection);
         PlayerService playerService = new PlayerServiceImpl(playerRepository);
 
-        // Initialize Transaction-related repositories and services
-        TransactionRepository transactionRepository = new InMemoryTransactionRepository();
+        TransactionRepository transactionRepository = new JdbcTransactionRepository(connection);
         TransactionService transactionService = new TransactionServiceImpl(playerRepository, transactionRepository);
 
-        // Initialize Admin-related repositories and services
-        AdminRepository adminRepository = new InMemoryAdminRepository();
+        AdminRepository adminRepository = new JdbcAdminRepository(connection);
         AdminService adminService = new AdminServiceImpl(adminRepository);
 
-        // Initialize Audit Log-related repositories and services
-        AuditLogRepository auditLogRepository = new InMemoryAuditLogRepository();
+        AuditLogRepository auditLogRepository = new JdbcAuditLogRepository(connection);
         AuditLogService auditLogService = new AuditLogServiceImpl(auditLogRepository, playerRepository);
 
-        // Set the services in the Service Container
         serviceContainer.setPlayerService(playerService);
         serviceContainer.setTransactionService(transactionService);
         serviceContainer.setAdminService(adminService);
         serviceContainer.setAuditLogService(auditLogService);
-
-        // Initialize the Console Authorization interface
-        ConsoleAuthorization consoleAuthorization = new ConsoleAuthorization(consoleInterfaceManager,
-                serviceContainer,
-                consoleUserInput);
-
-        // Push the authorization interface to the interface manager and start the application
-        consoleInterfaceManager.pushInterface(consoleAuthorization);
-        consoleInterfaceManager.start();
+        return serviceContainer;
     }
 }

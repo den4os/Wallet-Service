@@ -17,8 +17,8 @@ import java.util.List;
  * for a specific player.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-18
  */
 public class TransactionServiceImpl implements TransactionService {
 
@@ -63,7 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
                 player.setBalance(newBalance);
 
                 transactionRepository.saveTransaction(debitTransaction);
-                playerRepository.save(player);
+                playerRepository.updatePlayer(player);
 
                 return true;
             }
@@ -98,8 +98,7 @@ public class TransactionServiceImpl implements TransactionService {
                 player.setBalance(newBalance);
 
                 transactionRepository.saveTransaction(creditTransaction);
-                playerRepository.save(player);
-
+                playerRepository.updatePlayer(player);
 
                 return true;
             }

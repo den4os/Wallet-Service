@@ -7,8 +7,8 @@ import io.ylab.walletservice.domain.entities.Player;
  * It provides methods for finding a player by ID, finding a player by username, and saving a player entity.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-18
  */
 public interface PlayerRepository {
 
@@ -34,4 +34,8 @@ public interface PlayerRepository {
      * @param player The player entity to be saved.
      */
     void save(Player player);
+
+    String generateUniquePlayerId();
+
+    void updatePlayer(Player player);
 }

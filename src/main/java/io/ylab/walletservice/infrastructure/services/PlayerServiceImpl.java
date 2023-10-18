@@ -1,5 +1,6 @@
 package io.ylab.walletservice.infrastructure.services;
 
+import io.ylab.walletservice.domain.entities.Admin;
 import io.ylab.walletservice.domain.entities.Player;
 import io.ylab.walletservice.domain.repositories.PlayerRepository;
 
@@ -12,12 +13,11 @@ import java.math.BigDecimal;
  * and retrieval of player balances.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-17
  */
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerRepository playerRepository;
-    private int playerIdCount = 1;
 
     /**
      * Initializes a new instance of the {@code PlayerServiceImpl} class with the provided player repository.
@@ -41,21 +41,14 @@ public class PlayerServiceImpl implements PlayerService {
         if (existingPlayer != null) {
             return null;
         }
-
-        String playerId = Integer.toString(generateUniquePlayerId());
+        String playerId = playerRepository.generateUniquePlayerId();
         Player newPlayer = new Player(playerId, username, password, new BigDecimal("0.0"));
+        if (playerId != null) {
+            newPlayer.setPlayerId(playerId);
+        }
         playerRepository.save(newPlayer);
 
         return newPlayer;
-    }
-
-    /**
-     * Generates a unique player ID for a newly registered player.
-     *
-     * @return A unique player ID.
-     */
-    private int generateUniquePlayerId() {
-        return playerIdCount++;
     }
 
     /**
