@@ -3,14 +3,9 @@ package io.ylab.walletservice.infrastructure.data.jdbc;
 import io.ylab.walletservice.domain.entities.ActionResult;
 import io.ylab.walletservice.domain.entities.ActionType;
 import io.ylab.walletservice.domain.entities.AuditLog;
-import liquibase.Liquibase;
-import liquibase.database.jvm.JdbcConnection;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,19 +16,8 @@ class JdbcAuditLogRepositoryTest extends AbstractContainerBaseTest {
     private JdbcAuditLogRepository jdbcAuditLogRepository;
 
     @BeforeEach
-    void setUp() throws Exception {
-        String jdbcUrl = postgreSQLContainer.getJdbcUrl();
-        String username = postgreSQLContainer.getUsername();
-        String password = postgreSQLContainer.getPassword();
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-
-        Liquibase liquibase = new Liquibase(
-                "db/changelog/changelog.xml",
-                new ClassLoaderResourceAccessor(),
-                new JdbcConnection(connection)
-        );
-        liquibase.update((String) null);
-
+    public void setUp() throws Exception {
+        super.setUp();
         jdbcAuditLogRepository = new JdbcAuditLogRepository(connection);
     }
 
@@ -54,8 +38,8 @@ class JdbcAuditLogRepositoryTest extends AbstractContainerBaseTest {
 
     @Test
     void getAuditLogs() {
-        AuditLog auditLog1 = new AuditLog("1", ActionType.TRANSACTION, ActionResult.SUCCESS, LocalDateTime.now());
-        AuditLog auditLog2 = new AuditLog("2", ActionType.PLAYER_BALANCE, ActionResult.FAIL, LocalDateTime.now());
+        AuditLog auditLog1 = new AuditLog("2", ActionType.TRANSACTION, ActionResult.SUCCESS, LocalDateTime.now());
+        AuditLog auditLog2 = new AuditLog("3", ActionType.PLAYER_BALANCE, ActionResult.FAIL, LocalDateTime.now());
         jdbcAuditLogRepository.saveAuditLog(auditLog1);
         jdbcAuditLogRepository.saveAuditLog(auditLog2);
         List<AuditLog> actualAuditLogs = jdbcAuditLogRepository.getAuditLogs();

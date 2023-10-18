@@ -22,19 +22,8 @@ class JdbcTransactionRepositoryTest extends AbstractContainerBaseTest {
     private JdbcTransactionRepository jdbcTransactionRepository;
 
     @BeforeEach
-    void setUp() throws Exception {
-        String jdbcUrl = postgreSQLContainer.getJdbcUrl();
-        String username = postgreSQLContainer.getUsername();
-        String password = postgreSQLContainer.getPassword();
-        Connection connection = DriverManager.getConnection(jdbcUrl, username, password);
-
-        Liquibase liquibase = new Liquibase(
-                "db/changelog/changelog.xml",
-                new ClassLoaderResourceAccessor(),
-                new JdbcConnection(connection)
-        );
-        liquibase.update((String) null);
-
+    public void setUp() throws Exception {
+        super.setUp();
         jdbcTransactionRepository = new JdbcTransactionRepository(connection);
     }
 

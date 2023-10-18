@@ -46,7 +46,7 @@ public class Application {
      */
     public static void main(String[] args) {
 
-        Properties properties = PropertyReader.readProperties("src/resources/application.properties");
+        Properties properties = PropertyReader.readProperties("src/main/resources/application.properties");
         String url = properties.getProperty("url");
         String userName = properties.getProperty("username");
         String password = properties.getProperty("password");
