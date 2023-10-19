@@ -5,6 +5,8 @@ import io.ylab.walletservice.domain.repositories.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -29,7 +31,7 @@ class PlayerServiceImplTest {
 
     @Test
     void testAuthorizePlayer() {
-        Player existingPlayer = new Player("1", "SamplePlayer", "password", 100.0);
+        Player existingPlayer = new Player("1", "SamplePlayer", "password", new BigDecimal("100.0"));
         when(playerRepository.findByUsername("SamplePlayer")).thenReturn(existingPlayer);
         Player result = playerService.authorizePlayer("SamplePlayer", "password");
         assertNotNull(result);

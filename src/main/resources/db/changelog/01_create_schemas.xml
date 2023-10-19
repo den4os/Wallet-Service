@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.5.xsd"
+        logicalFilePath="db/changelog.xml">
+
+    <changeSet id="create_migration_schema" author="Denis Zanin">
+        <sql>
+            CREATE SCHEMA migration;
+        </sql>
+    </changeSet>
+    <changeSet id="create_wallet_schema" author="Denis Zanin">
+        <sql>
+            CREATE SCHEMA wallet;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

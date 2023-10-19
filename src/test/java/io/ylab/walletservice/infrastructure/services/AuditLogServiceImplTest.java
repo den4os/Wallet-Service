@@ -9,6 +9,7 @@ import io.ylab.walletservice.domain.repositories.PlayerRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ class AuditLogServiceImplTest {
         List<AuditLog> auditLogs = new ArrayList<>();
         auditLogs.add(new AuditLog(playerId, ActionType.PLAYER_BALANCE, ActionResult.SUCCESS, LocalDateTime.now()));
         auditLogs.add(new AuditLog("otherPlayer", ActionType.PLAYER_REGISTRATION, ActionResult.SUCCESS, LocalDateTime.now()));
-        when(playerRepository.findById(playerId)).thenReturn(new Player(playerId, "SamplePlayer", "password", 100.0));
+        when(playerRepository.findById(playerId)).thenReturn(new Player(playerId, "SamplePlayer", "password", new BigDecimal("100.0")));
         when(auditLogRepository.getAuditLogs()).thenReturn(auditLogs);
         List<AuditLog> result = auditLogService.getPlayerAuditLogs(playerId);
         assertEquals(1, result.size());

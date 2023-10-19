@@ -7,8 +7,8 @@ import io.ylab.walletservice.domain.entities.Admin;
  * It provides methods for finding an admin by username and saving an admin entity.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-17
  */
 public interface AdminRepository {
 
@@ -26,4 +26,12 @@ public interface AdminRepository {
      * @param admin The admin entity to be saved.
      */
     void save(Admin admin);
+
+    /**
+     * Generates and returns a unique identifier for an Admin entity.
+     * This can be used for admin-specific operations that require a unique ID.
+     *
+     * @return A unique identifier string for an Admin entity.
+     */
+    String generateUniqueAdminId();
 }

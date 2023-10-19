@@ -8,6 +8,7 @@ import io.ylab.walletservice.domain.repositories.TransactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,23 +32,23 @@ class TransactionServiceImplTest {
 
     @Test
     void testPerformDebitTransaction() {
-        Player player = new Player("samplePlayerId", "SamplePlayer", "password", 100.0);
+        Player player = new Player("samplePlayerId", "SamplePlayer", "password", new BigDecimal("100.0"));
         when(playerRepository.findById("samplePlayerId")).thenReturn(player);
         when(transactionRepository.getAllTransactions()).thenReturn(new HashMap<>());
-        boolean result = transactionService.performDebitTransaction("samplePlayerId", "debitTransactionId", 50.0);
+        boolean result = transactionService.performDebitTransaction("samplePlayerId", "debitTransactionId", new BigDecimal("50.0"));
         assertTrue(result);
-        assertEquals(50.0, player.getBalance());
+        assertEquals(new BigDecimal("50.0"), player.getBalance());
         verify(transactionRepository).saveTransaction(any());
     }
 
     @Test
     void testPerformCreditTransaction() {
-        Player player = new Player("samplePlayerId", "SamplePlayer", "password", 100.0);
+        Player player = new Player("samplePlayerId", "SamplePlayer", "password", new BigDecimal("100.0"));
         when(playerRepository.findById("samplePlayerId")).thenReturn(player);
         when(transactionRepository.getAllTransactions()).thenReturn(new HashMap<>());
-        boolean result = transactionService.performCreditTransaction("samplePlayerId", "creditTransactionId", 50.0);
+        boolean result = transactionService.performCreditTransaction("samplePlayerId", "creditTransactionId", new BigDecimal("50.0"));
         assertTrue(result);
-        assertEquals(150.0, player.getBalance());
+        assertEquals(new BigDecimal("150.0"), player.getBalance());
         verify(transactionRepository).saveTransaction(any());
     }
 
@@ -55,8 +56,8 @@ class TransactionServiceImplTest {
     void testGetPlayerTransactionHistory() {
         String playerId = "samplePlayerId";
         List<Transaction> transactions = new ArrayList<>();
-        transactions.add(new Transaction("txn1", playerId, TransactionType.DEBIT, 50.0, LocalDateTime.now()));
-        transactions.add(new Transaction("txn2", playerId, TransactionType.CREDIT, 30.0, LocalDateTime.now()));
+        transactions.add(new Transaction("txn1", playerId, TransactionType.DEBIT, new BigDecimal("50.0"), LocalDateTime.now()));
+        transactions.add(new Transaction("txn2", playerId, TransactionType.CREDIT, new BigDecimal("30.0"), LocalDateTime.now()));
         when(transactionRepository.getTransactionsByPlayerId(playerId)).thenReturn(transactions);
         List<Transaction> result = transactionService.getPlayerTransactionHistory(playerId);
         assertEquals(transactions, result);

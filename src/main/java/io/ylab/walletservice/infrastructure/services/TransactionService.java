@@ -2,6 +2,7 @@ package io.ylab.walletservice.infrastructure.services;
 
 import io.ylab.walletservice.domain.entities.Transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ public interface TransactionService {
      * @param amount        The amount to deduct from the player's balance.
      * @return `true` if the transaction is successful, `false` if the transaction fails (e.g., insufficient balance).
      */
-    boolean performDebitTransaction(String playerId, String transactionId, double amount);
+    boolean performDebitTransaction(String playerId, String transactionId, BigDecimal amount);
 
     /**
      * Performs a credit transaction for a player, adding a specified amount to their balance.
@@ -34,7 +35,7 @@ public interface TransactionService {
      * @param amount        The amount to add to the player's balance.
      * @return `true` if the transaction is successful, `false` if the transaction fails (e.g., invalid player ID).
      */
-    boolean performCreditTransaction(String playerId, String transactionId, double amount);
+    boolean performCreditTransaction(String playerId, String transactionId, BigDecimal amount);
 
     /**
      * Retrieves the transaction history for a specific player.

@@ -9,12 +9,11 @@ import io.ylab.walletservice.domain.repositories.AdminRepository;
  * It allows for the registration of new admin users and authorization of existing ones.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-17
  */
 public class AdminServiceImpl implements AdminService {
     private final AdminRepository adminRepository;
-    private int playerIdCount = 1;
 
     /**
      * Initializes a new instance of the {@code AdminServiceImpl} class with the provided admin repository.
@@ -38,22 +37,14 @@ public class AdminServiceImpl implements AdminService {
         if (existingAdmin != null) {
             return null;
         }
-
-        String adminId = generateUniqueAdminId();
+        String adminId = adminRepository.generateUniqueAdminId();
         Admin newAdmin = new Admin(adminId, username, password);
+        if (adminId != null) {
+            newAdmin.setAdminId(adminId);
+        }
         adminRepository.save(newAdmin);
 
         return newAdmin;
-    }
-
-    /**
-     * Generates a unique admin ID for a newly registered admin user.
-     *
-     * @return A unique admin ID.
-     */
-    private String generateUniqueAdminId() {
-        playerIdCount += playerIdCount;
-        return Integer.toString(playerIdCount);
     }
 
     /**

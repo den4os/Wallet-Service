@@ -6,6 +6,7 @@ import io.ylab.walletservice.domain.entities.TransactionType;
 import io.ylab.walletservice.domain.repositories.PlayerRepository;
 import io.ylab.walletservice.domain.repositories.TransactionRepository;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
  * for a specific player.
  *
  * @author Denis Zanin
- * @version 1.0
- * @since 2023-10-10
+ * @version 1.1
+ * @since 2023-10-18
  */
 public class TransactionServiceImpl implements TransactionService {
 
@@ -46,10 +47,10 @@ public class TransactionServiceImpl implements TransactionService {
      * (e.g., insufficient balance or duplicate transaction ID).
      */
     @Override
-    public boolean performDebitTransaction(String playerId, String transactionId, double amount) {
+    public boolean performDebitTransaction(String playerId, String transactionId, BigDecimal amount) {
         Player player = playerRepository.findById(playerId);
 
-        if (player != null && player.getBalance() >= amount) {
+        if (player != null && player.getBalance().compareTo(amount) >= 0) {
             if (!transactionRepository.getAllTransactions().containsKey(transactionId)) {
                 LocalDateTime timestamp = LocalDateTime.now();
                 Transaction debitTransaction = new Transaction(transactionId,
@@ -58,11 +59,11 @@ public class TransactionServiceImpl implements TransactionService {
                         amount,
                         timestamp);
 
-                double newBalance = player.getBalance() - amount;
+                BigDecimal newBalance = player.getBalance().subtract(amount);
                 player.setBalance(newBalance);
 
                 transactionRepository.saveTransaction(debitTransaction);
-                playerRepository.save(player);
+                playerRepository.updatePlayer(player);
 
                 return true;
             }
@@ -81,7 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
      * (e.g., invalid player ID or duplicate transaction ID).
      */
     @Override
-    public boolean performCreditTransaction(String playerId, String transactionId, double amount) {
+    public boolean performCreditTransaction(String playerId, String transactionId, BigDecimal amount) {
         Player player = playerRepository.findById(playerId);
 
         if (player != null) {
@@ -93,12 +94,11 @@ public class TransactionServiceImpl implements TransactionService {
                         amount,
                         timestamp);
 
-                double newBalance = player.getBalance() + amount;
+                BigDecimal newBalance = player.getBalance().add(amount);
                 player.setBalance(newBalance);
 
                 transactionRepository.saveTransaction(creditTransaction);
-                playerRepository.save(player);
-
+                playerRepository.updatePlayer(player);
 
                 return true;
             }
